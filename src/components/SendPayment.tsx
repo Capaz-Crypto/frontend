@@ -8,6 +8,7 @@ import { periodDuration, yieldStrategy } from '../utils/index';
 import CapazEscrowFactory from '../contracts/CapazEscrowFactory.json';
 import SimpleERC20 from '../contracts/SimpleERC20.json';
 import useConfig from '../hooks/useConfig';
+import { BigNumber } from 'ethers';
 
 export default function SendPayment() {
   const config = useConfig();
@@ -76,12 +77,16 @@ export default function SendPayment() {
     }
   }
 
+  const formattedAmount = BigNumber.from(amount).mul(
+    BigNumber.from(10).pow(selectedToken?.decimals ?? 0),
+  );
+
   // APPROVE
   const approveTx = useContractWrite({
     address: selectedToken?.address,
     abi: SimpleERC20.abi,
     functionName: 'approve',
-    args: [config?.escrowFactoryAddress, amount * 10 ** selectedToken?.decimals],
+    args: [config?.escrowFactoryAddress, formattedAmount],
     enabled: !!config && selectedToken,
   });
 
@@ -95,7 +100,7 @@ export default function SendPayment() {
         sender: `${isReady ? account.address : null}`,
         receiver: receiverAddress,
         tokenAddress: selectedToken?.address,
-        totalAmount: amount * 10 ** selectedToken?.decimals,
+        totalAmount: formattedAmount,
         startTime: getTimestampInSeconds(),
         periodDuration: selectedSelector.value,
         periods: frequency,

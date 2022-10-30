@@ -67,7 +67,7 @@ function PaymentRow({ payment }: { payment: Payment }) {
         {formatDate(payment.startTime.toNumber() * 1000)}
       </td>
       <td className='border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-3 '>
-        {ethers.utils.formatUnits(payment.totalAmount.toString(), 6)} {token?.symbol}
+        {ethers.utils.formatUnits(payment.totalAmount.toString(), token?.decimals)} {token?.symbol}
       </td>
       <td className='border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-3'>
         {payment.periods.toNumber()} times every {getPeriodName(payment.periodDuration.toNumber())}
@@ -76,10 +76,11 @@ function PaymentRow({ payment }: { payment: Payment }) {
         {getStrategyName(payment.yieldStrategyId.toNumber())}
       </td>
       <td className='border-t-0 px-4 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-3'>
-        {releasableAmount?.toString() ?? ''} {token?.symbol}
+        {ethers.utils.formatUnits(releasableAmount?.toString() ?? 0, token?.decimals)}{' '}
+        {token?.symbol}
       </td>
       <td className='border-t-0 px-4 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-3'>
-        {payment.receiver == account.address && (releasableAmount as BigNumber)?.toNumber() > 0 && (
+        {payment.receiver == account.address && (releasableAmount as BigNumber)?.gt(0) && (
           <ClaimButton escrowAddress={payment.escrowAddress} />
         )}
         {payment.sender == account.address &&
