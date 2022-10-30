@@ -5,6 +5,7 @@ import { ConnectButton, useAccount, useDisconnect, useNetwork } from '@web3modal
 import { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NetworkLink from './NetworkLink';
+import { chains } from '@web3modal/ethereum';
 
 export default function Header() {
   const { account } = useAccount();
@@ -51,6 +52,9 @@ export default function Header() {
                 </Menu.Item>
                 <Menu.Item>
                   <NetworkLink chaindId={5} chainName='Goerli' />
+                </Menu.Item>
+                <Menu.Item>
+                  <NetworkLink chaindId={chains.polygonMumbai.id} chainName='Mumbai' />
                 </Menu.Item>
                 {/* .If it's an dev env we display localhost network */}
                 {import.meta.env.DEV && (

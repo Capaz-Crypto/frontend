@@ -60,7 +60,13 @@ const cronostestnet = {
 const mumbai = {
   networkId: Network.MUMBAI,
   escrowFactoryAddress: '0x48C45A025D154b40AffB41bc3bDEecb689edE7E6',
-  tokens: [],
+  tokens: [
+    {
+      name: 'CPZ',
+      address: '0x5B5C32217dc6c13828F75221949fC6D1Bd6C6A08',
+      decimals: 18,
+    },
+  ],
 };
 
 const chains: { [networkId in Network]: Config } = {
