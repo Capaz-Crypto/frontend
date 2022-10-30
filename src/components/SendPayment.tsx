@@ -22,6 +22,7 @@ export default function SendPayment() {
   const [selectedYieldPlatform, setSelectedYieldPlatform] = useState(yieldStrategy[1]);
   const [selectedSelector, setSelectedSelector] = useState(periodDuration[5]);
   const [approveTxHasLoaded, setApproveTxHasLoaded] = useState(false);
+  const [executeTxHasLoaded, setExecuteTxHasLoaded] = useState(false);
   const [receiverAddress, setReceiverAddress] = useState(
     '0x0000000000000000000000000000000000000000',
   );
@@ -70,7 +71,9 @@ export default function SendPayment() {
         setApproveTxHasLoaded(true);
       });
     } else {
-      onPayment();
+      onPayment().then(() => {
+        setExecuteTxHasLoaded(true);
+      });
     }
   }
 
@@ -359,6 +362,18 @@ export default function SendPayment() {
               {executeTx.error && (
                 <div className='text-red-500 text-sm font-semibold text-center'>
                   {executeTx.error.message.split(' (')[0]}
+                </div>
+              )}
+              {/* display info message */}
+              {approveTxHasLoaded && !executeTxHasLoaded && (
+                <div className='text-blue-500 text-sm font-semibold'>
+                  You confirmed the transaction, you need to execute it by clicking on "Send Payment".
+                </div>
+              )}
+              {/* display success message */}
+              {executeTxHasLoaded && (
+                <div className='text-green-500 text-sm font-semibold'>
+                  Bravo, your transaction is confirmed
                 </div>
               )}
             </div>
